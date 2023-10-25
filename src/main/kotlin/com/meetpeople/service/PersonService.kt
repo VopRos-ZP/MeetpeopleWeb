@@ -13,19 +13,19 @@ class PersonService(
     private val personRepository: PersonRepository,
     private val meetingRepository: MeetingRepository,
     private val locationRepository: LocationRepository
-) {
+): EntityService<Person, PersonDTO> {
 
-    fun getAll(): List<Person> = personRepository.findAll()
+    override fun fetchAll(): List<Person> = personRepository.findAll()
 
-    fun getById(id: Long): Optional<Person> = personRepository.findById(id)
+    override fun fetchById(id: Long): Optional<Person> = personRepository.findById(id)
 
-    fun save(dto: PersonDTO): Person = fromDTO(
-        (getAll().size + 1).toLong(), dto
+    override fun create(dto: PersonDTO): Person = fromDTO(
+        (fetchAll().size + 1).toLong(), dto
     )
 
-    fun update(id: Long, dto: PersonDTO): Person = fromDTO(id, dto)
+    override fun update(id: Long, dto: PersonDTO): Person = fromDTO(id, dto)
 
-    fun delete(id: Long) {
+    override fun delete(id: Long) {
         personRepository.deleteById(id)
     }
 

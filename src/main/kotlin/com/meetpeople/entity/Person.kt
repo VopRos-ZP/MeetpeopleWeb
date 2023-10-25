@@ -34,11 +34,11 @@ data class Person(
     val about: String,
     val premium: Boolean,
 
-    @ManyToMany(mappedBy = "possible_meeting")
+    @ManyToMany(mappedBy = "possibleParticipants")
     @JsonIgnore
     val possibleMeeting: Set<Meeting>,
 
-    @ManyToMany(mappedBy = "meeting")
+    @ManyToMany(mappedBy = "participants")
     @JsonIgnore
     val meetings: Set<Meeting>
 )

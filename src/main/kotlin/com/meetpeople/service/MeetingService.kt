@@ -6,28 +6,30 @@ import com.meetpeople.repository.LocationRepository
 import com.meetpeople.repository.MeetingRepository
 import com.meetpeople.repository.PersonRepository
 import com.meetpeople.repository.TagRepository
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
 import java.util.Optional
 
+@Qualifier
 @Service
 class MeetingService(
     private val tagRepository: TagRepository,
     private val personRepository: PersonRepository,
     private val meetingRepository: MeetingRepository,
     private val locationRepository: LocationRepository,
-) {
+) : EntityService<Meeting, MeetingDTO> {
 
-    fun getAll(): List<Meeting> = meetingRepository.findAll()
+    override fun fetchAll(): List<Meeting> = meetingRepository.findAll()
 
-    fun getById(id: Long): Optional<Meeting> = meetingRepository.findById(id)
+    override fun fetchById(id: Long): Optional<Meeting> = meetingRepository.findById(id)
 
-    fun save(dto: MeetingDTO): Meeting = fromDTO(
-        (getAll().size + 1).toLong(), dto
+    override fun create(dto: MeetingDTO): Meeting = fromDTO(
+        (fetchAll().size + 1).toLong(), dto
     )
 
-    fun update(id: Long, dto: MeetingDTO): Meeting = fromDTO(id, dto)
+    override fun update(id: Long, dto: MeetingDTO): Meeting = fromDTO(id, dto)
 
-    fun delete(id: Long) {
+    override fun delete(id: Long) {
         meetingRepository.deleteById(id)
     }
 

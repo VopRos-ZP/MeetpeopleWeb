@@ -7,19 +7,21 @@ import org.springframework.stereotype.Service
 import java.util.Optional
 
 @Service
-class LocationService(private val locationRepository: LocationRepository) {
+class LocationService(
+    private val locationRepository: LocationRepository
+): EntityService<Location, LocationDTO> {
 
-    fun getAll(): List<Location> = locationRepository.findAll()
+    override fun fetchAll(): List<Location> = locationRepository.findAll()
 
-    fun getById(id: Long): Optional<Location> = locationRepository.findById(id)
+    override fun fetchById(id: Long): Optional<Location> = locationRepository.findById(id)
 
-    fun save(dto: LocationDTO): Location = fromDTO(
-        (getAll().size + 1).toLong(), dto
+    override fun create(dto: LocationDTO): Location = fromDTO(
+        (fetchAll().size + 1).toLong(), dto
     )
 
-    fun update(id: Long, dto: LocationDTO): Location = fromDTO(id, dto)
+    override fun update(id: Long, dto: LocationDTO): Location = fromDTO(id, dto)
 
-    fun delete(id: Long) {
+    override fun delete(id: Long) {
         locationRepository.deleteById(id)
     }
 

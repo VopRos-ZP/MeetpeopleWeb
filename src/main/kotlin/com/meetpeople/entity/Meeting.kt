@@ -10,15 +10,18 @@ data class Meeting(
     val id: Long,
     val name: String,
     val description: String,
+
     @ManyToOne
     @JoinColumn(name = "location_id")
     val location: Location,
     val date: Long?, // null - потом договоримся
     val views: Long,
     val publicationDate: Long,
+
     @ManyToOne
     @JoinColumn(name = "person_id")
     val personId: Person,
+
     @ManyToMany
     @JoinTable(
         name = "possible_participants",
@@ -26,6 +29,7 @@ data class Meeting(
         inverseJoinColumns = [JoinColumn(name = "person_id", referencedColumnName = "id")]
     )
     val possibleParticipants: Set<Person>,
+
     @ManyToMany
     @JoinTable(
         name = "participants",
@@ -33,6 +37,7 @@ data class Meeting(
         inverseJoinColumns = [JoinColumn(name = "person_id", referencedColumnName = "id")]
     )
     val participants: Set<Person>,
+
     @ManyToMany
     @JoinTable(
         name = "meeting_tags",
