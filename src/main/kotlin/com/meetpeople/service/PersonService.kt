@@ -42,7 +42,7 @@ class PersonService(
         status = dto.status,
         about = dto.about,
         premium = dto.premium,
-        possibleMeeting = meetingRepository.findAllById(dto.possibleMeetings).toSet(),
+        possibleMeetings = meetingRepository.findAllById(dto.possibleMeetings).toSet(),
         meetings = meetingRepository.findAllById(dto.meetings).toSet()
     ))
 

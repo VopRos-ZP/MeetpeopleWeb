@@ -36,7 +36,7 @@ data class Person(
 
     @ManyToMany(mappedBy = "possibleParticipants")
     @JsonIgnore
-    val possibleMeeting: Set<Meeting>,
+    val possibleMeetings: Set<Meeting>,
 
     @ManyToMany(mappedBy = "participants")
     @JsonIgnore
