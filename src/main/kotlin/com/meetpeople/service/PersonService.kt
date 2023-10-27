@@ -5,6 +5,7 @@ import com.meetpeople.entity.Person
 import com.meetpeople.repository.LocationRepository
 import com.meetpeople.repository.MeetingRepository
 import com.meetpeople.repository.PersonRepository
+import com.meetpeople.repository.SessionRepository
 import org.springframework.stereotype.Service
 import java.util.Optional
 
@@ -12,6 +13,7 @@ import java.util.Optional
 class PersonService(
     private val personRepository: PersonRepository,
     private val meetingRepository: MeetingRepository,
+    private val sessionRepository: SessionRepository,
     private val locationRepository: LocationRepository
 ): EntityService<Person, PersonDTO> {
 
@@ -42,6 +44,8 @@ class PersonService(
         status = dto.status,
         about = dto.about,
         premium = dto.premium,
+        onlineStatus = dto.onlineStatus,
+        sessions = sessionRepository.findAllById(dto.sessions).toSet(),
         possibleMeetings = meetingRepository.findAllById(dto.possibleMeetings).toSet(),
         meetings = meetingRepository.findAllById(dto.meetings).toSet()
     ))

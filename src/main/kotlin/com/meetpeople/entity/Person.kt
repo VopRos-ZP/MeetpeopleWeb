@@ -9,6 +9,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToMany
 import jakarta.persistence.ManyToOne
+import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 
 @Entity
@@ -33,6 +34,13 @@ data class Person(
     val status: String,
     val about: String,
     val premium: Boolean,
+
+    @Column(name = "online_status")
+    val onlineStatus: String,
+
+    @OneToMany
+    @JoinColumn(name = "session_id")
+    val sessions: Set<Session>,
 
     @ManyToMany(mappedBy = "possibleParticipants")
     @JsonIgnore
