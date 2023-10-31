@@ -36,7 +36,10 @@ class AuthService(
     fun registration(dto: PersonDTO): ResponseEntity<*> {
         return if (personService.findByPhone(dto.phone).isPresent) {
             ResponseEntity(Error(HttpStatus.BAD_REQUEST.value(), "Пользователь уже зарегистрирован"), HttpStatus.BAD_REQUEST)
-        } else ResponseEntity.ok(personService.create(dto.copy(password = passwordEncoder.encode(dto.password))))
+        } else {
+            personService.create(dto.copy(password = passwordEncoder.encode(dto.password)))
+            ResponseEntity(Error(HttpStatus.OK.value(), "Пользователь успешно зарегестрирован"), HttpStatus.OK)
+        }
     }
 
 }

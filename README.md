@@ -53,9 +53,11 @@ http://localhost:8088/api/v0/auth/registration
 ```
 ```json
 {
-  // person data
+  "status": int,
+  "message": string
 }
 ```
+Такой же `json` формат имеют ошибки сервера
 
 ## Endpoints
 
