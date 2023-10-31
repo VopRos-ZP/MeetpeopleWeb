@@ -12,6 +12,7 @@ data class PersonDTO(
     val status: String,
     val about: String,
     val premium: Boolean,
+    val vkId: String?,
     val onlineStatus: String,
     val sessions: Set<Long>,
     val possibleMeetings: Set<Long>,

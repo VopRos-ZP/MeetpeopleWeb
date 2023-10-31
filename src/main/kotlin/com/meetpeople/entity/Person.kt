@@ -21,6 +21,7 @@ data class Person(
     val firstname: String,
     val lastname: String,
     val password: String,
+    @Column(unique = true, nullable = false)
     val phone: String,
     val gender: String,
     val birthday: Long,
@@ -34,6 +35,8 @@ data class Person(
     val status: String,
     val about: String,
     val premium: Boolean,
+    @Column(name = "vk_id", unique = true)
+    val vkId: String?,
 
     @Column(name = "online_status")
     val onlineStatus: String,

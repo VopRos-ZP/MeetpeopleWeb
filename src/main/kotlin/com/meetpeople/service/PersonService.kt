@@ -6,8 +6,14 @@ import com.meetpeople.repository.LocationRepository
 import com.meetpeople.repository.MeetingRepository
 import com.meetpeople.repository.PersonRepository
 import com.meetpeople.repository.SessionRepository
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.userdetails.User
+import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
-import java.util.Optional
+import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
 @Service
 class PersonService(
@@ -15,7 +21,7 @@ class PersonService(
     private val meetingRepository: MeetingRepository,
     private val sessionRepository: SessionRepository,
     private val locationRepository: LocationRepository
-): EntityService<Person, PersonDTO> {
+): EntityService<Person, PersonDTO>, UserDetailsService {
 
     override fun fetchAll(): List<Person> = personRepository.findAll()
 
@@ -30,6 +36,8 @@ class PersonService(
     override fun delete(id: Long) {
         personRepository.deleteById(id)
     }
+
+    fun findByPhone(phone: String): Optional<Person> = personRepository.findPersonByPhone(phone)
 
     private fun fromDTO(id: Long, dto: PersonDTO): Person = personRepository.save(Person(
         id = id,
@@ -47,7 +55,17 @@ class PersonService(
         onlineStatus = dto.onlineStatus,
         sessions = sessionRepository.findAllById(dto.sessions).toSet(),
         possibleMeetings = meetingRepository.findAllById(dto.possibleMeetings).toSet(),
-        meetings = meetingRepository.findAllById(dto.meetings).toSet()
+        meetings = meetingRepository.findAllById(dto.meetings).toSet(),
+        vkId = dto.vkId
     ))
+
+    @Transactional
+    override fun loadUserByUsername(username: String?): UserDetails {
+        val user = personRepository.findPersonByPhone(username!!).orElseThrow {
+            UsernameNotFoundException("Пользователь '$username' не найден")
+        }
+        println(user.phone)
+        return User(user.phone, user.password, listOf(SimpleGrantedAuthority("ROLE_USER")))
+    }
 
 }
