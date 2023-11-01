@@ -1,6 +1,7 @@
 package com.meetpeople.service
 
 import com.meetpeople.dto.PersonDTO
+import com.meetpeople.entity.OnlineStatus
 import com.meetpeople.exceptions.Error
 import com.meetpeople.request.JwtRequest
 import com.meetpeople.response.JwtEntityResponse
@@ -29,7 +30,16 @@ class AuthService(
         }
         val userDetails = personService.loadUserByUsername(authRequest.phone)
         val token = tokenUtils.generateToken(userDetails)
-        val person = personService.findByPhone(authRequest.phone).get()
+        val person = personService.findByPhone(authRequest.phone).get().let { person ->
+            personService.update(person.id, PersonDTO(
+                person.firstname, person.lastname, person.password, person.phone,
+                person.gender, person.birthday, person.location.id, person.maritalStatus,
+                person.status, person.about, person.premium, person.vkId, "${OnlineStatus.ONLINE}",
+                person.sessions.map { it.id }.toSet(),
+                person.possibleMeetings.map { it.id }.toSet(),
+                person.meetings.map { it.id }.toSet()
+            ))
+        }
         return ResponseEntity.ok(JwtEntityResponse(token, person))
     }
 
@@ -42,4 +52,13 @@ class AuthService(
         }
     }
 
+    fun logout(dto: PersonDTO): ResponseEntity<*> {
+        val person = personService.findByPhone(dto.phone)
+        return if (person.isEmpty) {
+            ResponseEntity(Error(HttpStatus.BAD_REQUEST.value(), "Пользователь не зарегистрирован"), HttpStatus.BAD_REQUEST)
+        } else {
+            personService.update(person.get().id, dto.copy(onlineStatus = "${OnlineStatus.OFFLINE}"))
+            ResponseEntity.ok(Error(HttpStatus.OK.value(), "Пользователь вышел с аккаунта"))
+        }
+    }
 }

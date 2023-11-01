@@ -6,6 +6,8 @@
 * [Auth](#auth)
   * [Login](#Login) 
   * [Registration](#registration)
+  * [Logout](#logout)
+  * [OnlineStatus](#onlineStatus)
 * [Endpoints](#endpoints)
   * [Person](#person)
   * [Location](#location)
@@ -26,7 +28,7 @@ server.port=8088
 
 ### Login
 ```http request
-# Post
+# POST
 http://localhost:8088/api/v0/auth/login
 ```
 Request Body
@@ -48,7 +50,7 @@ Request Body
 
 ### Registration
 ```http request
-# Post
+# POST
 http://localhost:8088/api/v0/auth/registration
 ```
 ```json
@@ -58,6 +60,24 @@ http://localhost:8088/api/v0/auth/registration
 }
 ```
 Такой же `json` формат имеют ошибки сервера
+
+### Logout
+```http request
+# POST
+http://localhost:8088/api/v0/auth/logout
+```
+В тело запроса передается [`Person`](#person)
+
+### onlineStatus
+Онлайн статус изменяется только при запросах `/login` и `/logout` соответсвенно
+при этом если передать в тело запроса `Person` с другим онлайн статусом, он будет проигнорирован 
+и заменен на тот который подходить для данного запроса:
+
+| Запрос               | Статус  |
+|----------------------|---------|
+| [`/login`](#login)   | online  | 
+| [`/logout`](#logout) | offline |
+
 
 ## Endpoints
 

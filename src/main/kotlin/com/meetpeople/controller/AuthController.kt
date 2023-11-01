@@ -6,7 +6,9 @@ import com.meetpeople.service.AuthService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -18,5 +20,8 @@ class AuthController(private val authService: AuthService) {
 
     @PostMapping("/registration")
     fun registration(@RequestBody dto: PersonDTO): ResponseEntity<*> = authService.registration(dto)
+
+    @PostMapping("/logout")
+    fun logout(@RequestBody dto: PersonDTO): ResponseEntity<*> = authService.logout(dto)
 
 }
