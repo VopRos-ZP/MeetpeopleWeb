@@ -31,7 +31,6 @@ class PersonService(private val personRepository: PersonRepository): EntityServi
         val user = personRepository.findPersonByPhone(username!!).orElseThrow {
             UsernameNotFoundException("Пользователь '$username' не найден")
         }
-        println(user.phone)
         return User(user.phone, user.password, listOf(SimpleGrantedAuthority("ROLE_USER")))
     }
 
