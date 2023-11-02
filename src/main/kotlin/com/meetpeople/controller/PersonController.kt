@@ -1,12 +1,10 @@
 package com.meetpeople.controller
 
-import com.meetpeople.dto.PersonDTO
 import com.meetpeople.entity.Person
-import com.meetpeople.service.EntityService
-import org.springframework.web.bind.annotation.*
+import com.meetpeople.service.PersonService
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("api/v0/persons")
-class PersonController(
-    service: EntityService<Person, PersonDTO>
-): Controller<Person, PersonDTO>(service)
+class PersonController(service: PersonService): Controller<Person>(service)

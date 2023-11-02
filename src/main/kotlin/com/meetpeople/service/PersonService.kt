@@ -1,11 +1,7 @@
 package com.meetpeople.service
 
-import com.meetpeople.dto.PersonDTO
 import com.meetpeople.entity.Person
-import com.meetpeople.repository.LocationRepository
-import com.meetpeople.repository.MeetingRepository
 import com.meetpeople.repository.PersonRepository
-import com.meetpeople.repository.SessionRepository
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
@@ -16,48 +12,19 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
-class PersonService(
-    private val personRepository: PersonRepository,
-    private val meetingRepository: MeetingRepository,
-    private val sessionRepository: SessionRepository,
-    private val locationRepository: LocationRepository
-): EntityService<Person, PersonDTO>, UserDetailsService {
+class PersonService(private val personRepository: PersonRepository): EntityService<Person>, UserDetailsService {
 
     override fun fetchAll(): List<Person> = personRepository.findAll()
 
     override fun fetchById(id: Long): Optional<Person> = personRepository.findById(id)
 
-    override fun create(dto: PersonDTO): Person = fromDTO(
-        (fetchAll().size + 1).toLong(), dto
-    )
+    override fun create(e: Person): Person = personRepository.save(e.copy(id = personRepository.count() + 1))
 
-    override fun update(id: Long, dto: PersonDTO): Person = fromDTO(id, dto)
+    override fun update(e: Person): Person = personRepository.save(e)
 
-    override fun delete(id: Long) {
-        personRepository.deleteById(id)
-    }
+    override fun delete(id: Long) { personRepository.deleteById(id) }
 
     fun findByPhone(phone: String): Optional<Person> = personRepository.findPersonByPhone(phone)
-
-    private fun fromDTO(id: Long, dto: PersonDTO): Person = personRepository.save(Person(
-        id = id,
-        firstname = dto.firstname,
-        lastname = dto.lastname,
-        password = dto.password,
-        phone = dto.phone,
-        gender = dto.gender,
-        birthday = dto.birthday,
-        location = locationRepository.findById(dto.locationId).get(),
-        maritalStatus = dto.maritalStatus,
-        status = dto.status,
-        about = dto.about,
-        premium = dto.premium,
-        onlineStatus = dto.onlineStatus,
-        sessions = sessionRepository.findAllById(dto.sessions).toSet(),
-        possibleMeetings = meetingRepository.findAllById(dto.possibleMeetings).toSet(),
-        meetings = meetingRepository.findAllById(dto.meetings).toSet(),
-        vkId = dto.vkId
-    ))
 
     @Transactional
     override fun loadUserByUsername(username: String?): UserDetails {

@@ -4,10 +4,10 @@ import org.springframework.stereotype.Service
 import java.util.Optional
 
 @Service
-interface EntityService<E, D> {
+interface EntityService<E> {
     fun fetchAll(): List<E>
     fun fetchById(id: Long): Optional<E>
-    fun create(dto: D): E
-    fun update(id: Long, dto: D): E
+    fun create(e: E): E
+    fun update(e: E): E
     fun delete(id: Long)
 }

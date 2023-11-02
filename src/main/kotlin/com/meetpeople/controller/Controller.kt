@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
-open class Controller<E, D>(private val service: EntityService<E, D>) {
+open class Controller<E>(private val service: EntityService<E>) {
 
     @GetMapping("/")
     fun getAll(@RequestHeader("Authorization") token: String): ResponseEntity<JwtEntityResponse<List<E>>> =
@@ -23,12 +23,12 @@ open class Controller<E, D>(private val service: EntityService<E, D>) {
     }
 
     @PostMapping("/")
-    fun create(@RequestHeader("Authorization") token: String, @RequestBody dto: D): ResponseEntity<JwtEntityResponse<E>> =
-        ResponseEntity(JwtEntityResponse(Utils.fetchToken(token), service.create(dto)), HttpStatus.CREATED)
+    fun create(@RequestHeader("Authorization") token: String, @RequestBody e: E): ResponseEntity<JwtEntityResponse<E>> =
+        ResponseEntity(JwtEntityResponse(Utils.fetchToken(token), service.create(e)), HttpStatus.CREATED)
 
-    @PutMapping("/{id}")
-    fun update(@RequestHeader("Authorization") token: String, @PathVariable id: Long, @RequestBody dto: D): ResponseEntity<JwtEntityResponse<E>> =
-        ResponseEntity(JwtEntityResponse(Utils.fetchToken(token), service.update(id, dto)), HttpStatus.OK)
+    @PutMapping("/")
+    fun update(@RequestHeader("Authorization") token: String, @RequestBody e: E): ResponseEntity<JwtEntityResponse<E>> =
+        ResponseEntity(JwtEntityResponse(Utils.fetchToken(token), service.update(e)), HttpStatus.OK)
 
     @DeleteMapping("/{id}")
     fun delete(@RequestHeader("Authorization") token: String, @PathVariable id: Long): ResponseEntity<*> =
